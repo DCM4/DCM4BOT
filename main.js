@@ -33,7 +33,9 @@ if(message.content == `${BotSettings.prefix}help`) {
     .addField(`${BotSettings.prefix}kick`,`Kickt einen Nutzer`)
     .addField(`${BotSettings.prefix}ban`,`Bannt einen Nutzer`)
     .addField(`${BotSettings.prefix}say`,`Wiederholt deine Nachricht`)
-
+    .addField(`${BotSettings.prefix}clear`,`Löscht die Nachrichten`)
+    .addField(`${BotSettings.prefix}addrole`,`Gibt dir die Rolle die du willst`)
+    .addField(`${BotSettings.prefix}removerole`,`Nimmt dir die Rolle weg,die du willst`)
     message.channel.send(Helpembed)
 }
 
@@ -119,7 +121,55 @@ if(message.content.startsWith(`${BotSettings.prefix}ban`)) {
 
 }
 
-})
 
+//AddRole
+if(message.content.startsWith(`${BotSettings.prefix}addrole`)) {
+    if(message.member.hasPermission("ADMINISTRATOR"))  {
+    var Rolle = args.join(" ")  
+      if(message.guild.roles.find)(role => role.name === Rolle)
+      message.member.addRole(message.guild.roles.find(role => role.name === Rolle).id)
+      .then(message.channel.send(`Dir wurde die Rolle ${Rolle} hinzugefügt`)).catch(error => {
+          message.channel.send(`Ein Fehler ist aufgetaucht: \n${error}`)
+      })
+    } else {
+        message.channel.send(`Du hast keine Admin Rechte!`)
+    }
+}
+
+//RemoveRole
+if(message.content.startsWith(`${BotSettings.prefix}removerole`)) {
+    if(message.member.hasPermission("ADMINISTRATOR"))  {
+    var Rolle = args.join(" ")  
+      if(message.guild.roles.find)(role => role.name === Rolle)
+      message.member.removeRole(message.guild.roles.find(role => role.name === Rolle).id)
+      .then(message.channel.send(`Dir wurde die Rolle ${Rolle} entfernt`)).catch(error => {
+          message.channel.send(`Ein Fehler ist aufgetaucht: \n${error}`)
+      })
+    } else {
+        message.channel.send(`Du hast keine Admin Rechte!`)
+    }
+}
+
+
+//Clear
+if(message.content.startsWith(`${BotSettings.prefix}clear`)) {
+    if(message.member.hasPermission("MANAGE_MESSAGES"))  {
+
+        let deleteCount = parseInt(args[0], 10);
+
+        if (!deleteCount || deleteCount < 2 || deleteCount > 100) return message.reply("Bitte gib eine Nummer zwischen **2** und **100**.");
+
+        let deleted = await message.channel.bulkDelete(deleteCount).catch(error => message.reply(`Ich kann die nachrichten nicht löschen weil ${error}`));    
+
+        message.channel.send(`**${deleted.size}** Nachrichten wurden gelöscht. ${message.author}`)
+    }   
+}
+  
+//Invite
+if(message.content == `${BotSettings.prefix}invite`) {
+    message.channel.send("Hier ist mein Einladungslink: \nhttps://discordapp.com/oauth2/authorize?client_id=528644946983518209&permissions=8&scope=bot")
+}
+
+})      
 
 bot.login(process.env.BOT_TOKEN)
