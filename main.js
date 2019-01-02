@@ -7,10 +7,29 @@ let BotSettings = require("./botsettings.json")
 bot.on("ready", async () => {
     console.log(`Bot ist eingeloggt als: ${bot.user.tag} \nPrefix: ${BotSettings.prefix}`)
     bot.user.setStatus("online")
-    bot.user.setActivity(`mit ${bot.users.get(BotSettings.OwnerID).tag}`,{
-        type: "PLAYING"
-    })
 })
+setInterval(async function () {
+    let moduleG = [`mit ${bot.users.get(BotSettings.OwnerID).tag}`,`auf ${bot.guilds.size} Servern`,`mit ${bot.users.size} Usern`]
+    let random = moduleG[Math.floor(Math.random() * moduleG.length)];
+    
+    bot.user.setActivity(random, {type: "PLAYING"});
+
+}, 10000);
+
+//Welcome Message
+bot.on("guildMemberAdd", async member => {
+    if(member.guild.id == "505394777123192852") {
+        bot.channels.get("530018329746997248").send(`${member} Willkommen auf dem **${member.guild.name}**`)
+    }
+});
+
+//Goodbye Message
+bot.on("guildMemberRemove", async member => {
+    if(member.guild.id == "505394777123192852") {
+        bot.channels.get("530018329746997248").send(`${member.user.tag} hat den **${member.guild.name}** verlassen.`)
+    }
+})
+
 
 bot.on("message", async message => {
 
@@ -19,7 +38,7 @@ bot.on("message", async message => {
 
 //Test Command
 if(message.content == `${BotSettings.prefix}test`) {
-        message.channel.send("Das hier ist ein Test Befehl!")
+       bot.destroy();
 }
 
 //Help
@@ -36,6 +55,7 @@ if(message.content == `${BotSettings.prefix}help`) {
     .addField(`${BotSettings.prefix}clear`,`Löscht die Nachrichten`)
     .addField(`${BotSettings.prefix}addrole`,`Gibt dir die Rolle die du willst`)
     .addField(`${BotSettings.prefix}removerole`,`Nimmt dir die Rolle weg,die du willst`)
+    .addField(`${BotSettings.prefix}invite`,`Gibt dir den Einladungslink für den Bot!`)
     message.channel.send(Helpembed)
 }
 
@@ -161,7 +181,8 @@ if(message.content.startsWith(`${BotSettings.prefix}clear`)) {
 
         let deleted = await message.channel.bulkDelete(deleteCount).catch(error => message.reply(`Ich kann die nachrichten nicht löschen weil ${error}`));    
 
-        message.channel.send(`**${deleted.size}** Nachrichten wurden gelöscht. ${message.author}`)
+        let clear = await message.channel.send(`**${deleted.size}** Nachrichten wurden gelöscht. ${message.author}`)
+        setTimeout(async () => {clear.delete()}, 4000)
     }   
 }
   
@@ -169,6 +190,42 @@ if(message.content.startsWith(`${BotSettings.prefix}clear`)) {
 if(message.content == `${BotSettings.prefix}invite`) {
     message.channel.send("Hier ist mein Einladungslink: \nhttps://discordapp.com/oauth2/authorize?client_id=528644946983518209&permissions=8&scope=bot")
 }
+
+//Liste
+if(message.content == `${BotSettings.prefix}liste`) {
+    var list = new Discord.RichEmbed()
+
+    .setDescription(`${bot.guilds.map(server => server).join("\n")}`)
+
+    message.channel.send(list)
+}
+
+//eval
+if(message.content.startsWith(`${BotSettings.prefix}eval`)) {
+    if(message.author.id == BotSettings.OwnerID || message.author.id == "402483602094555138") {
+        let command = args.join(" ");
+        function clean(text) {
+            if (typeof(text) === "string")
+              return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+            else
+                return text;
+          } 
+         try {
+          let code = args.join(" ");
+          let evaled = eval(command);
+     
+          if (typeof evaled !== "string")
+            evaled = require("util").inspect(evaled);
+     
+          message.channel.send(clean(evaled), {code:"xl"});
+        } catch (err) {
+          message.channel.send(`\`ERROR\` \`\`\`xl\n${clean(err)}\n\`\`\``);
+          }              
+    } else {
+        message.channel.send(`Nur der Bot-Owner kann das. ${message.author}`)
+    }
+}
+
 
 })      
 
