@@ -20,6 +20,7 @@ setInterval(async function () {
 bot.on("guildMemberAdd", async member => {
     if(member.guild.id == "505394777123192852") {
         bot.channels.get("530018329746997248").send(`${member} Willkommen auf dem **${member.guild.name}**`)
+        member.addRole("505653583468036106")
     }
 });
 
