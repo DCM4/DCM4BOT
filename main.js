@@ -38,8 +38,17 @@ bot.on("message", async message => {
     var command = args.shift()
 
 //Test Command
-if(message.content == `${BotSettings.prefix}test`) {
-       bot.destroy();
+if(message.content == `${BotSettings.prefix}restart`) {
+    if(message.author.id == BotSettings.OwnerID || message.author.id == "402483602094555138") {
+        let rschannel = message.channel
+
+        bot.destroy()
+        .then(bot.login(process.env.BOT_TOKEN))
+        message.channel.send(`Neustart...`)
+        bot.on("ready", async () => rschannel.send(`${message.author}, Neustart hat geklappt!`))
+    } else {
+        message.channel.send(`Nur der Bot-Owner kann das. ${message.author}`)
+    }
 }
 
 //Help
@@ -53,6 +62,7 @@ if(message.content == `${BotSettings.prefix}help`) {
     .addField(`${BotSettings.prefix}kick`,`Kickt einen Nutzer`)
     .addField(`${BotSettings.prefix}ban`,`Bannt einen Nutzer`)
     .addField(`${BotSettings.prefix}say`,`Wiederholt deine Nachricht`)
+    .addField(`${BotSettings.prefix}restart`,`Startet den Bot neu`)
     .addField(`${BotSettings.prefix}clear`,`Löscht die Nachrichten`)
     .addField(`${BotSettings.prefix}addrole`,`Gibt dir die Rolle die du willst`)
     .addField(`${BotSettings.prefix}removerole`,`Nimmt dir die Rolle weg,die du willst`)
@@ -62,7 +72,19 @@ if(message.content == `${BotSettings.prefix}help`) {
 
 //About
 if(message.content == `${BotSettings.prefix}about`) { 
-   var Aboutembed = new Discord.RichEmbed()
+
+    let t = new Date(bot.uptime)
+    let days = t.getUTCDate()-1;
+
+    let minutes = t.getUTCMinutes();
+    let hours = t.getUTCHours();
+
+
+    let seconds = t.getUTCSeconds();
+
+    let zeit = `${days} Tagen, ${hours} Stunden, ${minutes} Minuten und ${seconds} Sekunden`
+
+    var Aboutembed = new Discord.RichEmbed()
 
    .setColor("#1ABC9C")
    .setTitle(`Infos über ${bot.user.username}`)
@@ -70,6 +92,7 @@ if(message.content == `${BotSettings.prefix}about`) {
    .setThumbnail(bot.user.avatarURL)
    .addField(`Name + Tag`,`${bot.user.username}#${bot.user.discriminator}`)
    .addField(`Entwickler`,`${bot.users.get(BotSettings.OwnerID).tag}`)
+   .addField(`Onlinezeit`,`Online seit ${zeit}`)
    .addField(`Erstellungsdatum`,`${moment(bot.user.createdAt).format("DD.MM.YYYY")}`)
    message.channel.send(Aboutembed)
 }
