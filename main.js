@@ -207,7 +207,9 @@ if(message.content.startsWith(`${BotSettings.prefix}clear`)) {
 
         let clear = await message.channel.send(`**${deleted.size}** Nachrichten wurden gelöscht. ${message.author}`)
         setTimeout(async () => {clear.delete()}, 4000)
-    }   
+    } else {
+        message.channel.send(`Du hast keine Nachrichten-Verwalten Rechte!`)
+    }
 }
   
 //Invite
