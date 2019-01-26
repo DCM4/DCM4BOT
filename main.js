@@ -37,13 +37,13 @@ bot.on("message", async message => {
     var args = message.content.slice(BotSettings.prefix.length).trim().split(" ")
     var command = args.shift()
 
-//Test Command
+//Restart
 if(message.content == `${BotSettings.prefix}restart`) {
     if(message.author.id == BotSettings.OwnerID || message.author.id == "402483602094555138") {
         let rschannel = message.channel
 
         bot.destroy()
-        .then(bot.login(process.env.BOT_TOKEN))
+        .then(bot.login(BotSettings.token))
         message.channel.send(`Neustart...`)
         bot.on("ready", async () => rschannel.send(`${message.author}, Neustart hat geklappt!`))
     } else {
@@ -67,6 +67,8 @@ if(message.content == `${BotSettings.prefix}help`) {
     .addField(`${BotSettings.prefix}addrole`,`Gibt dir die Rolle die du willst`)
     .addField(`${BotSettings.prefix}removerole`,`Nimmt dir die Rolle weg,die du willst`)
     .addField(`${BotSettings.prefix}invite`,`Gibt dir den Einladungslink für den Bot!`)
+    .addField(`${BotSettings.prefix}Serverliste`,`Zeigt dir eine Liste an,auf welchen Server der Bot alles ist`)
+    .addField
     message.channel.send(Helpembed)
 }
 
@@ -251,8 +253,8 @@ if(message.content.startsWith(`${BotSettings.prefix}eval`)) {
         message.channel.send(`Nur der Bot-Owner kann das. ${message.author}`)
     }
 }
+   
 
+})
 
-})      
-
-bot.login(process.env.BOT_TOKEN)
+bot.login(BotSettings.token)
