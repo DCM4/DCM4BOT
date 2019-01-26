@@ -101,7 +101,7 @@ if(message.content == `${BotSettings.prefix}about`) {
 
 //Say
 if(message.content.startsWith(`${BotSettings.prefix}say`)){
-    if(message.author.id == BotSettings.OwnerID) { 
+    if(message.member.hasPermission("MANAGE_MESSAGES")) { 
         var Say = args.join(" ") 
         if(Say) {
             message.channel.send(Say) 
@@ -109,7 +109,7 @@ if(message.content.startsWith(`${BotSettings.prefix}say`)){
             message.channel.send(`Was soll ich bitte sagen? ${message.author}`)
         }
     } else { 
-        message.channel.send(`Nur der Bot-Owner kann das. ${message.author}`)
+        message.channel.send(`Du brauchst Nachrichten Verwalten Rechte ${message.author}`)
     }
     message.delete();
 }
