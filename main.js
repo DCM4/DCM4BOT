@@ -43,7 +43,7 @@ if(message.content == `${BotSettings.prefix}restart`) {
         let rschannel = message.channel
 
         bot.destroy()
-        .then(bot.login(process.env.BOT_TOKEN))
+        .then(bot.login(BotSettings.token))
         message.channel.send(`Neustart...`)
         bot.on("ready", async () => rschannel.send(`${message.author}, Neustart hat geklappt!`))
     } else {
@@ -68,7 +68,6 @@ if(message.content == `${BotSettings.prefix}help`) {
     .addField(`${BotSettings.prefix}removerole`,`Nimmt dir die Rolle weg,die du willst`)
     .addField(`${BotSettings.prefix}invite`,`Gibt dir den Einladungslink für den Bot!`)
     .addField(`${BotSettings.prefix}Serverliste`,`Zeigt dir eine Liste an,auf welchen Server der Bot alles ist`)
-    .addField
     message.channel.send(Helpembed)
 }
 
@@ -257,4 +256,4 @@ if(message.content.startsWith(`${BotSettings.prefix}eval`)) {
 
 })
 
-bot.login(process.env.BOT_TOKEN)
+bot.login(BotSettings.token)
