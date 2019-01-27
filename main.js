@@ -43,7 +43,7 @@ if(message.content == `${BotSettings.prefix}restart`) {
         let rschannel = message.channel
 
         bot.destroy()
-        .then(bot.login(BotSettings.token))
+        .then(bot.login(process.env.BOT_TOKEN))
         message.channel.send(`Neustart...`)
         bot.on("ready", async () => rschannel.send(`${message.author}, Neustart hat geklappt!`))
     } else {
@@ -256,4 +256,4 @@ if(message.content.startsWith(`${BotSettings.prefix}eval`)) {
 
 })
 
-bot.login(BotSettings.token)
+bot.login(process.env.BOT_TOKEN)
